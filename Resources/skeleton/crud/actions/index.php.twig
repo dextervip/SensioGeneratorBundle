@@ -7,6 +7,7 @@
 {% if 'annotation' == format %}
      * @Route("/", name="{{ route_name_prefix }}_index", defaults={"page" = 1}, requirements={"page" = "\d+"})
      * @Method("GET")
+     * @Template()
 {% endif %}
 {% endblock phpdoc_method_annotations %}
      */
@@ -28,8 +29,8 @@
 {% endblock method_body %}
 
 {% block method_return %}
-        return $this->render('{{ entity|lower|replace({'\\': '/'}) }}/index.html.twig', array(
+        return array(
             '{{ entity_pluralized }}' => $pagination,
-        ));
+        );
 {% endblock method_return %}
     }
