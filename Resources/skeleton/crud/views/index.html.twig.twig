@@ -65,17 +65,8 @@
                         {%- if loop.last %}
 
                             <td>
-                                <ul>
+                                {% include "crud/views/others/actions.html.twig.twig" -%}
 
-                                {%- for action in record_actions %}
-
-                                    <li>
-                                        <a href="{{ "{{ path('" ~ route_name_prefix ~ "_" ~ action ~ "', { 'id': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">{{ action }}</a>
-                                    </li>
-
-                                {%- endfor %}
-
-                                </ul>
                             </td>
 
                         {%- endif %}
