@@ -82,6 +82,10 @@
                     {%- endfor %}
 
                         </tr>
+                    {{ '{% else %}' }}
+                    <tr>
+                        <td colspan="{{ fields|length + 1 }}">{{ '{{ "No entries."|trans }}' }}</td>
+                    </tr>
                     {{ '{% endfor %}' }}
                     </tbody>
                 </table>
