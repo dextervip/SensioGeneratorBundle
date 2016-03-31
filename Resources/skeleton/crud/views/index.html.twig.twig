@@ -4,86 +4,92 @@
 
 {% block body %}
 {{ "{% block body %}" }}
-    <h1>{{ entity }} list</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>{{ entity }} list</h1>
 
-    <table>
-        <thead>
-            <tr>
-            {%- for field, metadata in fields %}
+                {% if 'new' in actions -%}
+                    <a href="{{ "{{ path('" ~ route_name_prefix ~ "_new') }}" }}"class="btn btn-primary">
+                        <i class="fa fa-plus"></i> {{ '{{ "New entry"|trans }}' }}
+                    </a>
+                {%- endif %}
 
-                <th>{{ field|capitalize }}</th>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                        {%- for field, metadata in fields %}
 
-            {%- endfor %}
+                            <th>{{ field|capitalize }}</th>
 
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {{ '{% for ' ~ entity_singularized ~ ' in ' ~ entity_pluralized ~ ' %}' }}
-            <tr>
+                        {%- endfor %}
 
-        {%- for field, metadata in fields %}
-            {%- if loop.first and ('show' in actions) %}
+                            <th>{{ '{{ "Actions"|trans }}' }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {{ '{% for ' ~ entity_singularized ~ ' in ' ~ entity_pluralized ~ ' %}' }}
+                        <tr>
 
-                <td><a href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { 'id': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></td>
+                    {%- for field, metadata in fields %}
+                        {%- if loop.first and ('show' in actions) %}
 
-            {%- elseif metadata.type in ['datetime'] %}
+                            <td><a href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { 'id': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></td>
 
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
-            
-            {%- elseif metadata.type in ['date'] %}
+                        {%- elseif metadata.type in ['datetime'] %}
 
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}{% endif %}' }}</td>
-          
-            {%- elseif metadata.type in ['time'] %}
+                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
 
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
+                        {%- elseif metadata.type in ['date'] %}
 
-            {%- elseif metadata.type in ['array'] %}
+                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}{% endif %}' }}</td>
 
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</td>
+                        {%- elseif metadata.type in ['time'] %}
 
-            {%- elseif metadata.type in ['boolean'] %}
+                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
 
-                <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}Yes{% else %}No{% endif %}' }}</td>
+                        {%- elseif metadata.type in ['array'] %}
 
-            {%- else %}
+                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</td>
 
-                <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
+                        {%- elseif metadata.type in ['boolean'] %}
 
-            {%- endif %}
+                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}Yes{% else %}No{% endif %}' }}</td>
 
-            {%- if loop.last %}
+                        {%- else %}
 
-                <td>
-                    <ul>
+                            <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
 
-                    {%- for action in record_actions %}
+                        {%- endif %}
 
-                        <li>
-                            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_" ~ action ~ "', { 'id': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">{{ action }}</a>
-                        </li>
+                        {%- if loop.last %}
 
+                            <td>
+                                <ul>
+
+                                {%- for action in record_actions %}
+
+                                    <li>
+                                        <a href="{{ "{{ path('" ~ route_name_prefix ~ "_" ~ action ~ "', { 'id': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">{{ action }}</a>
+                                    </li>
+
+                                {%- endfor %}
+
+                                </ul>
+                            </td>
+
+                        {%- endif %}
                     {%- endfor %}
 
-                    </ul>
-                </td>
-
-            {%- endif %}
-        {%- endfor %}
-
-            </tr>
-        {{ '{% endfor %}' }}
-        </tbody>
-    </table>
-
-    {% if 'new' in actions -%}
-    <ul>
-        <li>
-            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_new') }}" }}">Create a new entry</a>
-        </li>
-    </ul>
-    {%- endif %}
-
+                        </tr>
+                    {{ '{% endfor %}' }}
+                    </tbody>
+                </table>
+                <div class="navigation">
+                    {{ '{{ knp_pagination_render('~entity_pluralized~') }}' }}
+                </div>
+            </div>
+        </div>
+    </div>
 {{ "{% endblock %}" }}
 {% endblock body %}

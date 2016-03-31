@@ -1,24 +1,21 @@
-    <ul>
-        <li>
-            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_index') }}" }}">Back to the list</a>
-        </li>
+    <div class="btn-toolbar" role="toolbar">
+            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_index') }}" }}" class="btn btn-default btn-group" role="group">
+                <i class="fa fa-arrow-left"></i> {{ '{{ "Back"|trans }}' }}
+            </a>
 
         {%- if ('edit' in actions) and (not hide_edit) %}
 
-        <li>
-            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_edit', { 'id': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">Edit</a>
-        </li>
+            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_edit', { 'id': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}" class="btn btn-default btn-group" role="group">
+                <i class="fa fa-pencil-square-o"></i> {{ '{{ "Edit"|trans }}' }}
+            </a>
 
         {%- endif %}
 
         {%- if ('delete' in actions) and (not hide_delete) %}
-
-        <li>
-            {{ '{{ form_start(delete_form) }}' }}
-                <input type="submit" value="Delete">
-            {{ '{{ form_end(delete_form) }}' }}
-        </li>
+            <a href="{{ "{{ path('" ~ route_name_prefix ~ "_delete', { 'id': "~ entity_singularized ~ "."~ identifier ~" }) }}" }}" class="btn btn-danger btn-group" role="group" title="{{ '{{ "Delete"|trans }}' }}" data-confirm="{{ '{{ "Are you sure you wanna delete this entry?"|trans }}' }}">
+                <i class="fa fa-trash-o"></i> {{ '{{ "Delete"|trans }}' }}
+            </a>
 
         {%- endif %}
 
-    </ul>
+    </div>
