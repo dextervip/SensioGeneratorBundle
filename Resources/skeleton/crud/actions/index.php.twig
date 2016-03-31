@@ -17,7 +17,7 @@
 {% block method_body %}
         $em = $this->getDoctrine()->getManager();
 
-        $query = $em->getRepository('{{ bundle }}:{{ entity }}')->createQueryBuilder('{{ entity|lower|[:1] }}');
+        $query = $em->getRepository('{{ bundle }}:{{ entity }}')->createQueryBuilder('{{ (entity|lower)[:1] }}');
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
