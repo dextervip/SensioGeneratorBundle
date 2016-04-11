@@ -1,6 +1,6 @@
 <?php
 
-namespace {{ namespace }}\Form{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
+namespace {{ namespace }}\Form\Filter{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
 
 {% block use_statements %}
 use Symfony\Component\Form\AbstractType;
@@ -25,7 +25,7 @@ class {{ form_class }} extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-
+            ->add('id', Filters\NumberFilterType::class)
         {%- for field in fields -%}
             {%- if fields_mapping[field] is defined and fields_mapping[field]['type'] in ['date', 'time', 'datetime'] %}
 
