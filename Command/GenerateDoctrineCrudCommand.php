@@ -229,6 +229,7 @@ EOT
     protected function generateForm($bundle, $entity, $metadata, $forceOverwrite = false)
     {
         $this->getFormGenerator($bundle)->generate($bundle, $entity, $metadata[0], $forceOverwrite);
+        $this->getFormGenerator($bundle)->generateFilter($bundle, $entity, $metadata[0], $forceOverwrite);
     }
 
     protected function updateRouting(QuestionHelper $questionHelper, InputInterface $input, OutputInterface $output, BundleInterface $bundle, $format, $entity, $prefix)

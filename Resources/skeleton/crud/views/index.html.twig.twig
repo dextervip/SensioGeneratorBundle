@@ -7,81 +7,130 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>{{ entity }} list</h1>
+                <h1>{{ entity }} <small>list</small></h1>
+                <hr>
 
-                {% if 'new' in actions -%}
-                    <a href="{{ "{{ path('" ~ route_name_prefix ~ "_new') }}" }}"class="btn btn-primary">
-                        <i class="fa fa-plus"></i> {{ '{{ "New entry"|trans }}' }}
-                    </a>
-                {%- endif %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">Filtro</div>
+                    <div class="panel-body">
+                        {{ '{{ form_start(filter_form, {"class" : "form-inline", "attr": {"novalidate": "novalidate"}}) }}' }}
 
-                <table class="table table-striped table-bordered table-hover">
-                    <thead>
-                        <tr>
+                        <div class="row">
                         {%- for field, metadata in fields %}
+                            <div class="col-md-3">
+                                {{ '{{ form_row(filter_form.'~ field|replace({'_': ''}) ~') }}' }}
+                            </div>
 
-                            <th>{{ field|capitalize }}</th>
+                        {% if loop.index % 4 == 0 and not loop.last%}
+                            </div>
+                            <div class="row">
+                        {% endif %}
 
                         {%- endfor %}
+                        </div>
 
-                            <th>{{ '{{ "Actions"|trans }}' }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {{ '{% for ' ~ entity_singularized ~ ' in ' ~ entity_pluralized ~ ' %}' }}
-                        <tr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <hr>
+                                <div class="pull-right">
+                                    <button type="reset" class="btn btn-danger"><i class="fa fa-remove"></i> {{ '{{ "Clear"|trans }}' }}
+                                    </button>
+                                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> {{ '{{ "Search"|trans }}' }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        {{ '{{ form_end(filter_form) }}' }}
+                    </div>
+                </div>
 
-                    {%- for field, metadata in fields %}
-                        {%- if loop.first and ('show' in actions) %}
 
-                            <td><a href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { 'id': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></td>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            {% if 'new' in actions -%}
+                            <div class="col-md-offset-10 col-md-2">
+                                <a href="{{ "{{ path('" ~ route_name_prefix ~ "_new') }}" }}" class="btn btn-primary"
+                                   style="float: right;">
+                                    <i class="fa fa-plus"></i> {{ '{{ "New entry"|trans }}' }}
+                                </a>
+                            </div>
+                            {%- endif %}
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="panel-body">
 
-                        {%- elseif metadata.type in ['datetime'] %}
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                {%- for field, metadata in fields %}
 
-                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
+                                    <th>{{ field|capitalize }}</th>
 
-                        {%- elseif metadata.type in ['date'] %}
+                                {%- endfor %}
 
-                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}{% endif %}' }}</td>
+                                    <th>{{ '{{ "Actions"|trans }}' }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {{ '{% for ' ~ entity_singularized ~ ' in ' ~ entity_pluralized ~ ' %}' }}
+                                <tr>
 
-                        {%- elseif metadata.type in ['time'] %}
+                            {%- for field, metadata in fields %}
+                                {%- if loop.first and ('show' in actions) %}
 
-                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
+                                    <td><a href="{{ "{{ path('" ~ route_name_prefix ~ "_show', { 'id': " ~ entity_singularized ~ "."~ identifier ~" }) }}" }}">{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</a></td>
 
-                        {%- elseif metadata.type in ['array'] %}
+                                {%- elseif metadata.type in ['datetime'] %}
 
-                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</td>
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d H:i:s\') }}{% endif %}' }}</td>
 
-                        {%- elseif metadata.type in ['boolean'] %}
+                                {%- elseif metadata.type in ['date'] %}
 
-                            <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}Yes{% else %}No{% endif %}' }}</td>
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'Y-m-d\') }}{% endif %}' }}</td>
 
-                        {%- else %}
+                                {%- elseif metadata.type in ['time'] %}
 
-                            <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|date(\'H:i:s\') }}{% endif %}' }}</td>
 
-                        {%- endif %}
+                                {%- elseif metadata.type in ['array'] %}
 
-                        {%- if loop.last %}
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ '|join(\', \') }}{% endif %}' }}</td>
 
-                            <td>
-                                {% include "crud/views/others/actions.html.twig.twig" -%}
+                                {%- elseif metadata.type in ['boolean'] %}
 
-                            </td>
+                                    <td>{{ '{% if ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' %}Yes{% else %}No{% endif %}' }}</td>
 
-                        {%- endif %}
-                    {%- endfor %}
+                                {%- else %}
 
-                        </tr>
-                    {{ '{% else %}' }}
-                    <tr>
-                        <td colspan="{{ fields|length + 1 }}">{{ '{{ "No entries."|trans }}' }}</td>
-                    </tr>
-                    {{ '{% endfor %}' }}
-                    </tbody>
-                </table>
-                <div class="navigation">
-                    {{ '{{ knp_pagination_render('~entity_pluralized~') }}' }}
+                                    <td>{{ '{{ ' ~ entity_singularized ~ '.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
+
+                                {%- endif %}
+
+                                {%- if loop.last %}
+
+                                    <td>
+                                        {% include "crud/views/others/actions.html.twig.twig" -%}
+
+                                    </td>
+
+                                {%- endif %}
+                            {%- endfor %}
+
+                                </tr>
+                            {{ '{% else %}' }}
+                            <tr>
+                                <td colspan="{{ fields|length + 1 }}">{{ '{{ "No entries."|trans }}' }}</td>
+                            </tr>
+                            {{ '{% endfor %}' }}
+                            </tbody>
+                        </table>
+                        <div class="navigation">
+                            {{ '{{ knp_pagination_render('~entity_pluralized~') }}' }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

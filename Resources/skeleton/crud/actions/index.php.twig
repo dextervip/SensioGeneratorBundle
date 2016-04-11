@@ -20,6 +20,17 @@
 
         $query = $em->getRepository('{{ bundle }}:{{ entity }}')->createQueryBuilder('{{ (entity|lower)[:1] }}');
 
+        $form = $this->createForm({{ entity }}FilterType::class);
+
+        if ($request->request->has($form->getName())) {
+            $form->submit($request->get($form->getName()));
+            $request->getSession()->set($form->getName(),$request->get($form->getName()));
+            $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($form, $query);
+        }else if($request->getSession()->has($form->getName())){
+            $form->submit($request->getSession()->get($form->getName()));
+            $this->get('lexik_form_filter.query_builder_updater')->addFilterConditions($form, $query);
+        }
+
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
@@ -31,6 +42,7 @@
 {% block method_return %}
         return array(
             '{{ entity_pluralized }}' => $pagination,
+            'filter_form' => $form->createView()
         );
 {% endblock method_return %}
     }
