@@ -28,8 +28,9 @@ class {{ form_class }} extends AbstractType
             ->add('id', Filters\NumberFilterType::class)
         {%- for field in fields -%}
             {%- if fields_mapping[field] is defined and fields_mapping[field]['type'] in ['date', 'time', 'datetime'] %}
+            {% set type = fields_mapping[field]['type'] %}
 
-            ->add('{{ field }}', Filters\{{ fields_mapping[field]['type']|capitalize }}FilterType::class)
+            ->add('{{ field }}', Filters\{{ type  == 'datetime' ? 'DateTime' : type|capitalize }}FilterType::class)
 
             {%- else %}
 
