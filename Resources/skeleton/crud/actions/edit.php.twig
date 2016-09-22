@@ -25,7 +25,7 @@
             $em->persist(${{ entity_singularized }});
             $em->flush();
 
-            $this->get('session')->getFlashBag()->add('success', 'The entry has been edited!');
+            $this->addFlash('success', 'The entry has been edited!');
 
             return $this->redirectToRoute('{{ route_name_prefix }}_show', array('id' => ${{ entity_singularized }}->getId()));
         }

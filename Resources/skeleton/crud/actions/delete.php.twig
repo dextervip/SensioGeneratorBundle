@@ -20,7 +20,7 @@
         $em->remove(${{ entity_singularized }});
         $em->flush();
 
-        $this->get('session')->getFlashBag()->add('success', 'The entry has been deleted!');
+        $this->addFlash('success', 'The entry has been deleted!');
 {% endblock method_body %}
 
 {% block method_return %}
